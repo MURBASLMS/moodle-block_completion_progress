@@ -92,6 +92,8 @@ class overview extends \table_sql {
             $tableheaders[] = $this->output->render($checkbox);
         }
 
+        $tablecolumns[] = 'idnumber';
+        $tableheaders[] = get_string('idnumber');
         $tablecolumns[] = 'fullname';
         $tableheaders[] = get_string('fullname');
 
@@ -116,6 +118,7 @@ class overview extends \table_sql {
         }
 
         $this->set_attribute('class', 'overviewTable');
+        $this->column_class('idnumber', 'col-idnumber');
         $this->column_class('fullname', 'col-fullname');
         $this->column_class('timeaccess', 'col-timeaccess');
         $this->column_class('progressbar', 'col-progressbar');
@@ -142,7 +145,7 @@ class overview extends \table_sql {
         }
 
         $this->set_sql(
-            "DISTINCT $picturefields, l.timeaccess",
+            "DISTINCT $picturefields, u.idnumber, l.timeaccess",
             "{user} u {$enroljoin->joins} {$rolejoin} LEFT JOIN {user_lastaccess} l ON l.userid = u.id AND l.courseid = :courseid",
             "{$enroljoin->wheres} {$rolewhere}",
             $params
@@ -273,6 +276,15 @@ class overview extends \table_sql {
         } else {
             return parent::col_fullname($row);
         }
+    }
+
+    /**
+     * Display user id number.
+     * @param object $row
+     * @return string HTML
+     */
+    public function col_idnumber($row) {
+        return $row->idnumber;
     }
 
     /**
